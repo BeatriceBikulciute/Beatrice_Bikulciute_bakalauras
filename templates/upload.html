@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Duomenų įkėlimas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="card col-md-8 col-lg-6 mx-auto px-3 my-5">
+        <h1 class="mx-auto py-3">Duomenų įkėlimas</h1>
+        <form class="p-3" action="/upload" id="uploadForm" method="post" enctype="multipart/form-data">
+          <div class="custom-file">
+            <input class="custom-file-input" type="file" id="selectedFile" name="selectedFile" lang="lt" accept=".csv">
+            <label class="custom-file-label" for="selectedFile" data-browse="Ieškoti">Pasirinkite failą</label>
+          </div>
+          <button class="btn btn-info mt-3" type="submit" id="uploadBtn" name="upload" value="Submit">Įkelti</button>
+        </form>
+        <hr>
+        <div class="p-3">
+          <h4>Priimamas formatas</h4>
+          <p>yyyy-mm-dd,reikšmė</p>
+          <h4>Pavyzdys:</h4>
+          <span>
+            2000-01-01,0.402367 <br>
+            2000-02-01,0.397695 <br>
+            2000-03-01,0.392883
+          </span>
+          <br><br>
+          <p><em>Faile neturi būti jokių pašalinių reikšmių.</em></p>
+        </div>
+      </div>
+    </div>
+    <script src="/static/js/upload_script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+  </body>
+</html>

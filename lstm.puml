@@ -1,0 +1,100 @@
+@startuml
+
+' class definitions
+class DatetimeIndex {
+    -start: Timestamp
+    -end: Timestamp
+    -freq: pandas.tseries.offsets
+    +__init__(self, data)
+}
+
+class Ndarray {
+    -array: numpy.ndarray
+    +__init__(self, data)
+}
+
+class Sequential {
+    -layers: list
+    -metrics: list
+    -loss: str
+    +__init__(self)
+    +add(self, layer)
+    +compile(self, optimizer, loss, metrics)
+    +fit(self, X, y, epochs)
+}
+
+class List {
+    -list: list
+    +__init__(self, data)
+}
+
+class Float {
+    -value: float
+    +__init__(self, data)
+}
+
+class DataFrame {
+    -data: pandas.DataFrame
+    -index: pandas.Index
+    -columns: pandas.Index
+    +__init__(self, data)
+}
+
+class Figure {
+    -canvas: matplotlib.backend_bases.RendererBase
+    -axes: list
+    +__init__(self)
+}
+
+class AxesSubplot {
+    -figure: Figure
+    -title: str
+    -x_label: str
+    -y_label: str
+    +__init__(self, fig, title, x_label, y_label)
+}
+
+class MinMaxScaler {
+    -data_min: numpy.ndarray
+    -data_max: numpy.ndarray
+    -data_range: numpy.ndarray
+    -data_min_: numpy.ndarray
+    -data_max_: numpy.ndarray
+    +__init__(self)
+    +fit_transform(self, X)
+    +inverse_transform(self, X)
+}
+
+class LSTM {
+    -sequence: Ndarray
+    -prognosis_num: int
+    -checkbox: int
+    -model: Sequential
+    -X: list
+    -y: list
+    -last_value: Float
+    -forecast_values: List
+    -forecast_dates: DatetimeIndex
+    -forecast_result: DataFrame
+    -fig: Figure
+    -ax: AxesSubplot
+    -rmse: float
+    +lstm_data(data, date_diff_data, original_data, prognosis_num, checkbox, period): dict
+}
+
+'class relationships
+LSTM -> DatetimeIndex
+LSTM -> Ndarray
+LSTM -> Sequential
+LSTM -> List
+LSTM -> Float
+LSTM -> DataFrame
+LSTM -> Figure
+LSTM -> AxesSubplot
+LSTM -> MinMaxScaler
+LSTM -> "tensorflow.keras.layers.LSTM"
+LSTM -> "tensorflow.keras.layers.Dense"
+LSTM -> numpy
+LSTM -> pandas
+
+@enduml

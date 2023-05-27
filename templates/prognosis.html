@@ -1,0 +1,287 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Prognozavimas</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+  </head>
+  <body>
+
+    <nav class="navbar py-2 px-5 navbar-expand-md navbar-dark bg-dark">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarLinks">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-center" id="navbarLinks">
+        <ul class="navbar-nav">
+          <li class="nav-item active px-3">
+            <a class="nav-link" href="/upload">Įkelti kitus duomenis</a>
+          </li>
+          <li class="nav-item active px-3">
+            <a class="nav-link" href="/data_process">Duomenų analizė</a>
+          </li>
+          <li class="nav-item active px-3">
+            <a class="nav-link" href="/differentiate">Diferencijavimas</a>
+          </li>
+          <li class="nav-item active px-3">
+            <a class="nav-link active-nav" href="/prognosis">Prognozavimas</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-md-12 py-2">
+
+          <div class="card p-3">
+            <div class="d-flex flex-wrap align-items-center">
+              <div class="col-sm-12 col-md-4 mb-3 mb-md-0">
+                <h1 class="m-0 p-xs-0 p-lg-2">Prognozavimas</h1>
+              </div>
+              <div class="vr-h"></div>
+              <div class="col-sm-5 col-md-3 mb-3 mb-md-0">
+                {% if recom %}
+                <h5 class="card-subtitle">Duomenų analizės rekomendacija:</h5>
+                <p class="card-text m-0">{{ recom }}</p>
+                {% endif %}
+              </div>
+              <div class="vr-h"></div>
+              <div class="col-sm-5 col-md-3">
+                {% if recom_diff %}
+                <h5 class="card-subtitle">Diferencijavimo rekomendacija:</h5>
+                <p class="card-text m-0">{{ recom_diff }}</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <form action="/prognosis" method="post" enctype="multipart/form-data">
+            <div class="form-row align-items-center">
+              <div class="col-md-4 col-lg-3 py-sm-2">
+                <label for="dropdown">Pasirinkite algoritmą</label>
+                <select name="dropdown" id="dropdown" class="form-control">
+                  <option value="option_dlt">EG</option>
+                  <option value="option_arima">ARIMA</option>
+                  <option value="option_sarimax" id="sarimax">SARIMAX</option>
+                  <option value="option_lstm">LSTM</option>
+                </select>
+              </div>
+              <div class="col-md-4 col-lg-3 py-sm-2">
+                <label for="prognosis_num">Kiek reikšmių prognozuoti?</label>
+                <input type="number" name="prognosis_num" id="prognosis_num" min="1" max="40" class="form-control" required oninput="validatePrognosisNum()" oninvalid="this.setCustomValidity('Įveskite prognozuojamų reikšmių skaičių nuo 1 iki 40')" onchange="this.setCustomValidity('')">
+                <span id="prognosis_num_error" class="error-message"></span>
+              
+                <script>
+                  function validatePrognosisNum() {
+                  const input = document.getElementById('prognosis_num');
+                  const value = input.value;
+  
+                    if (isNaN(value) || value < 1 || value > 40) {
+                       input.setCustomValidity('Įveskite prognozuojamų reikšmių skaičių nuo 1 iki 40');
+                    } else {
+                      input.setCustomValidity('');
+                    }
+                  }
+                </script>
+              </div>              
+                <div class="col-md-4 col-lg-3 pt-sm-2 pt-md-3 pt-lg-0 ">
+                  <label class="align-self-start " for="checkbox">Naudoti differencijuotus duomenis?</label>
+                  <div class="form-check align-self-start py-lg-2">
+                    <input type="checkbox" name="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="checkbox">Taip</label>
+                  </div>
+                </div>
+                <div class="col-md-4 col-lg-3 pt-sm-2">
+                  <label class="align-self-start " for="checkbox">Kokias periodais turi būti spausdinami rezultatai?</label>
+                  <div class="form-check align-self-start py-lg-2">
+                      <input class="form-check-input" type="radio" name="period" id="period_day" value="day" >
+                      <label class="form-check-label" for="period_day">Dienos    </label>
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="period" id="period_month" value="month" checked>
+                  </div>
+                  <div class="form-check form-check-inline">
+                      <label class="form-check-label" for="period_month">Mėnesiai</label>
+                  </div>
+              </div>              
+              </div>
+              <div class="row">
+              <div class="col-md-4 col-lg-2 pt-sm-2">
+                <label for="sarimax_num">SARIMAX periodas</label>
+                <input type="number" name="sarimax_num" id="sarimax_num" min="0" max="20" class="form-control" disabled oninput="validateSarimaxNum()">
+                  <script>
+                  function validateSarimaxNum() {
+                  const input = document.getElementById('sarimax_num');
+                  const value = input.value;
+  
+                    if (isNaN(value) || value < 2 || value > 100) {
+                       input.setCustomValidity('Įveskite SARIMAX modelio reikšmę nuo 0 iki 20.');
+                    } else {
+                      input.setCustomValidity('');
+                    }
+              }
+            </script>
+              </div>
+              <div class="col-md-4 col-lg-2 pt-sm-2">
+                <label for="sar">SARIMAX AR parametras</label>
+                <input type="number" name="sar" id="sar" min="0" max="3" class="form-control" disabled oninput="validateSarNum()">
+                  <script>
+                  function validateSarNum() {
+                  const input = document.getElementById('sar');
+                  const value = input.value;
+  
+                    if (isNaN(value) || value < 0 || value > 3) {
+                       input.setCustomValidity('Įveskite modelio AR reikšmę nuo 0 iki 3.');
+                    } else {
+                      input.setCustomValidity('');
+                    }
+              }
+            </script>
+              </div>
+              <div class="col-md-4 col-lg-2 pt-sm-2">
+                <label for="sma">SARIMAX MA parametras</label>
+                <input type="number" name="sma" id="sma" min="0" max="3" class="form-control" disabled oninput="validateSmaNum()">
+                  <script>
+                  function validateSmaNum() {
+                  const input = document.getElementById('sma');
+                  const value = input.value;
+  
+                    if (isNaN(value) || value < 0 || value > 3) {
+                       input.setCustomValidity('Įveskite modelio SMA reikšmę nuo 0 iki 3.');
+                    } else {
+                      input.setCustomValidity('');
+                    }
+              }
+            </script>
+              </div>
+              <div class="col-md-4 col-lg-2 pt-sm-2">
+                <label for="ar">AR parametras</label>
+                <input type="number" name="ar" id="ar" min="0" max="3" class="form-control" disabled oninput="validateArNum()">
+                  <script>
+                  function validateArNum() {
+                  const input = document.getElementById('ar');
+                  const value = input.value;
+  
+                    if (isNaN(value) || value < 0 || value > 3) {
+                       input.setCustomValidity('Įveskite modelio AR reikšmę nuo 0 iki 3.');
+                    } else {
+                      input.setCustomValidity('');
+                    }
+              }
+            </script>
+              </div>
+              <div class="col-md-4 col-lg-2 pt-sm-2">
+                <label for="ma">MA  parametras</label>
+                <input type="number" name="ma" id="ma" min="0" max="3" class="form-control" disabled oninput="validateMaNum()">
+                  <script>
+                  function validateMaNum() {
+                  const input = document.getElementById('ma');
+                  const value = input.value;
+  
+                    if (isNaN(value) || value < 0 || value > 3) {
+                       input.setCustomValidity('Įveskite modelio MA reikšmę nuo 0 iki 3.');
+                    } else {
+                      input.setCustomValidity('');
+                    }
+              }
+            </script>
+              </div>
+              <div class="col-md-4 col-lg-2 pt-sm-2">
+                <label for="neur_sk">Neuronų skaičius</label>
+                <input type="number" name="neur_sk" id="neur_sk" min="0" max="200" class="form-control" disabled oninput="validateArNum()">
+                  <script>
+                  function validateArNum() {
+                  const input = document.getElementById('neur_sk');
+                  const value = input.value;
+  
+                    if (isNaN(value) || value < 0 || value > 200) {
+                       input.setCustomValidity('Įveskite neuronų skaičių nuo 0 iki 200.');
+                    } else {
+                      input.setCustomValidity('');
+                    }
+              }
+            </script>
+              </div>
+              <div class="col-md-4 col-lg-2 pt-sm-2">
+                <label for="epoch">Epochų sakičius</label>
+                <input type="number" name="epoch" id="epoch" min="0" max="500" class="form-control" disabled oninput="validateArNum()">
+                  <script>
+                  function validateArNum() {
+                  const input = document.getElementById('epoch');
+                  const value = input.value;
+  
+                    if (isNaN(value) || value < 0 || value > 500) {
+                       input.setCustomValidity('Įveskite epochų skaičių nuo 0 iki 500.');
+                    } else {
+                      input.setCustomValidity('');
+                    }
+              }
+            </script>
+            </div>
+                <div class="col-md-4 col-lg-3 pt-sm-2">
+                  <label class="align-self-start " for="trend_type">Koks yra trendo tipas?</label>
+                  <div class="form-check align-self-start py-lg-2">
+                      <input class="form-check-input" type="radio" name="type" id="type_add" value="add" >
+                      <label class="form-check-label" for="type_add">Pridedamasis</label>
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="type" id="type_mul" value="mul" checked>
+                  <div class="form-check form-check-inline">
+                      <label class="form-check-label" for="type_mul">Dauginamasis</label>
+                  </div>
+              </div>
+            </div>
+                </script>
+                </div>
+            </div>
+            <button type="submit" name="prognosis_btn" class="btn btn-info mt-3">Prognozuoti</button>
+          </form>
+        </div>
+      </div>
+
+      {% if result_dict %}
+
+      <div class="row justify-content-center">
+        <div class="col-md-4 col-lg-3 py-2">
+          <div class="card p-3 scroll">
+
+            {% for index, row in result_dict.forecast_result.iterrows() %}
+            <span class="p-2">
+              <h5 class="card-subtitle">{{ index.strftime('%Y-%m-%d') }}</h5>
+              <p class="card-text">{{ row['value'] }}</p>
+            </span>
+            <hr class="m-0">
+            {% endfor %}
+            
+          </div>
+          <div class="card p-3 mt-2">
+            <span class="p-2">
+              <h5 class="card-subtitle">RMSE:</h5>
+              <p class="card-text">{{ result_dict.rmse }}</p>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-8 col-lg-9 py-2">
+          <div class="card p-3">
+            <div class="row justify-content-center">
+              <div class="col-lg-8">
+                <img src="{{ result_dict.prognosis_graph_url }}" alt="Grafikas1">
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% endif %}
+    </div>
+
+    <script src="/static/js/prognosis_script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+  </body>
+</html>

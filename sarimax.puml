@@ -1,0 +1,71 @@
+@startuml
+class sarimax_data {
+    - data
+    - date_diff_data
+    - original_data
+    - prognosis_num
+    - sarimax_num
+    - checkbox
+    - period
+    - scaler: MinMaxScaler
+    - model: sm.tsa.statespace.SARIMAX
+    - results: pd.DataFrame
+    - forecast: pd.DataFrame
+    - forecast_original: pd.DataFrame
+    - forecast_dates: pd.DataFrame
+    - forecast_data: pd.Series
+    - forecast_result: pd.Series
+    - fig: matplotlib.figure.Figure
+    - ax: matplotlib.axes.Axes
+    - prognosis_graph_url: str
+    - y_true: np.array
+    - y_pred: np.array
+    - rmse: float
+    - result_dict: dict
+    + __init__(self, data, date_diff_data, original_data, prognosis_num, sarimax_num, checkbox, period)
+    + preprocess_data(self)
+    + build_model(self)
+    + make_forecast(self)
+    + decode_forecast(self)
+    + visualize_results(self)
+    + calculate_rmse(self)
+    + generate_result_dict(self)
+}
+
+class MinMaxScaler {
+    + fit_transform(self, X)
+}
+
+class sm.tsa.statespace.SARIMAX {
+    + fit(self, **kwargs)
+    + forecast(self, steps, **kwargs)
+}
+
+class pd.DataFrame {
+    + dropna(self)
+}
+
+class plt.subplots {
+    + tight_layout()
+}
+
+class get_graph_url {
+    + get_graph_url(fig)
+}
+
+class np.array {
+    + reshape(self, shape, order='C')
+}
+
+class mean_squared_error {
+    + mean_squared_error(y_true, y_pred)
+}
+
+sarimax_data --> MinMaxScaler
+sarimax_data --> sm.tsa.statespace.SARIMAX
+sarimax_data --> pd.DataFrame
+sarimax_data --> plt.subplots
+sarimax_data --> get_graph_url
+sarimax_data --> np.array
+sarimax_data --> mean_squared_error
+@enduml

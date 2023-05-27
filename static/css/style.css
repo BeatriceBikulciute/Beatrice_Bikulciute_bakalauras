@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  background-color: #f8f9fa !important;
+}
+
+hr {
+  margin: 1rem 0;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+nav ul li > a::after {
+  content: '';
+  display: block;
+  margin: auto;
+  height: 2px;
+  width: 0;
+  top: 5px;
+  background: transparent;
+  transition: all 0.3s;
+}
+
+nav ul li > a:hover::after,
+nav ul li > a.active-nav::after {
+  width: 100%;
+  background: #17a2b8;
+}
+
+img {
+  width: 100%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.scroll {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.vr,
+.vr-h {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  height: 72px;
+  margin: 0 1rem;
+}
+
+@media (max-width: 767.98px) {
+  .vr-h {
+    display: none;
+  }
+}

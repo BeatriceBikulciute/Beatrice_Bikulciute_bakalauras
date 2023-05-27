@@ -1,0 +1,67 @@
+@startuml
+class MinMaxScaler {
+  - feature_range : tuple
+  - scale_ : np.ndarray
+  - data_min_ : np.ndarray
+  - data_max_ : np.ndarray
+  - data_range_ : np.ndarray
+  - data_range_is_zero_ : bool
+  + fit(data: np.ndarray) : MinMaxScaler
+  + transform(data: np.ndarray) : np.ndarray
+  + inverse_transform(data: np.ndarray) : np.ndarray
+}
+
+class ExponentialSmoothing {
+  - trend : str
+  - seasonal : str
+  - damped : bool
+  - use_boxcox : bool
+  - initialization_method : str
+  - initial_level : float
+  - initial_trend : float
+  - initial_seasonal : float
+  - initial_state : np.ndarray
+  - bounds : list
+  - dates : pd.DatetimeIndex
+  - freq : str
+  - missing : str
+  - score : str
+  - scorer : function or None
+  - trended : bool
+  - seasonal_periods : int
+  - smoothing_level : float
+  - smoothing_slope : float
+  - smoothing_seasonal : float
+  - damping_slope : float
+  - use_basinhopping : bool
+  - optimized : bool
+  + fit() : ExponentialSmoothingResults
+  + forecast(steps: int) : np.ndarray
+  ...
+}
+
+class ExponentialSmoothingResults {
+  - model : ExponentialSmoothing
+  - params : dict
+  - fittedfcast : np.ndarray
+  - fittedvalues : np.ndarray
+  - mse : float
+  - level : np.ndarray
+  - slope : np.ndarray
+  - seasonal : np.ndarray
+  - sse : float
+  - aic : float
+  - bic : float
+  - hqic : float
+  - params_formatted : str
+  - fittedfcast_formatted : str
+  - fittedvalues_formatted : str
+  + summary() : str
+  + plot() : None
+  + forecast(steps: int) : np.ndarray
+  ...
+}
+
+MinMaxScaler --> ExponentialSmoothing
+ExponentialSmoothing --> ExponentialSmoothingResults
+@enduml

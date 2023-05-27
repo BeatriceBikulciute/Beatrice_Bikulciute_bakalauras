@@ -1,0 +1,40 @@
+@startuml
+class ARIMA {
+    - data
+    - date_diff_data
+    - original_data
+    - prognosis_num
+    - checkbox
+    + arima_data()
+    + readFile()
+}
+
+class DataFrame {
+    - date
+    - value
+    + set_index()
+}
+
+class Results {
+    + forecast()
+    + fit()
+}
+
+class Numpy {
+    + array()
+}
+
+class SkLearn {
+    + mean_squared_error()
+}
+
+class Matplotlib {
+    + pyplot
+}
+
+ARIMA -> DataFrame
+Results -> Numpy
+ARIMA -> Results
+ARIMA -> Matplotlib
+ARIMA -> SkLearn
+@enduml
